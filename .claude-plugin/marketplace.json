@@ -1,0 +1,26 @@
+{
+  "name": "aranea-claude-tools",
+  "owner": {
+    "name": "AraneaDev",
+    "url": "https://github.com/AraneaDev"
+  },
+  "description": "Small, focused Claude Code plugins. Local-first, no telemetry.",
+  "plugins": [
+    {
+      "name": "claude-timestamp",
+      "source": {
+        "source": "github",
+        "repo": "AraneaDev/claude-timestamp"
+      },
+      "description": "Local time and turn duration on every message, the tool behind a slow turn, and a summary of where each session's time went."
+    },
+    {
+      "name": "kanon",
+      "source": {
+        "source": "github",
+        "repo": "AraneaDev/kanon"
+      },
+      "description": "Every rule governing this session, named, including the ones you thought loaded and didn't."
+    }
+  ]
+}
