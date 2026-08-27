@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # A marketplace can break without anyone touching it: a plugin repository
+    # gets renamed, made private, or deleted, and every install silently stops
+    # working. Nothing in this repo would change, so nothing would rebuild.
+    # Once a week is enough to notice before a user does.
+    - cron: '0 6 * * 1'
+
+jobs:
+  marketplace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON
+        run: jq -e . .claude-plugin/marketplace.json > /dev/null && echo "marketplace.json ok"
+
+      - name: Check the marketplace against the repositories it advertises
+        # Needs a token: the plugin repositories are queried through the API to
+        # confirm they exist and declare the plugin name this manifest claims.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/check-marketplace.sh
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Syntax check
+        run: |
+          for f in tools/*.sh; do
+            bash -n "$f" && echo "ok  $f"
+          done
+
+      - name: shellcheck
+        run: |
+          if ! command -v shellcheck >/dev/null 2>&1; then
+            version=v0.10.0
+            curl -fsSL "https://github.com/koalaman/shellcheck/releases/download/${version}/shellcheck-${version}.linux.x86_64.tar.xz" \
+              | tar -xJf - --strip-components=1 -C /usr/local/bin "shellcheck-${version}/shellcheck"
+          fi
+          shellcheck -S style tools/*.sh
