@@ -71,6 +71,14 @@ This marketplace keeps working. Its manifest still points at each plugin's own r
 you already added it you keep getting updates. The only thing you miss is what is published from
 now on, which is the skills and prompts and anything added after them.
 
+If you would rather stay here, these still work:
+
+```bash
+claude plugin marketplace add AraneaDev/aranea-claude-tools
+claude plugin install claude-timestamp@aranea-claude-tools
+claude plugin install kanon@aranea-claude-tools
+```
+
 ## What is here
 
 ### [claude-timestamp](https://github.com/AraneaDev/claude-timestamp)
